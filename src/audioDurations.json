@@ -1,0 +1,52 @@
+{
+  "_meta": {
+    "generatedAt": "2026-03-29T06:22:02.165Z",
+    "fps": 30,
+    "bufferSeconds": 2,
+    "transitionFrames": 15,
+    "totalDurationSeconds": 227,
+    "totalDurationFrames": 6804
+  },
+  "sections": {
+    "intro": {
+      "audioDuration": 10.8,
+      "totalSeconds": 13,
+      "frames": 384
+    },
+    "point-1": {
+      "audioDuration": 32.3,
+      "totalSeconds": 35,
+      "frames": 1030
+    },
+    "point-2": {
+      "audioDuration": 31.1,
+      "totalSeconds": 34,
+      "frames": 994
+    },
+    "point-3": {
+      "audioDuration": 32.6,
+      "totalSeconds": 35,
+      "frames": 1038
+    },
+    "point-4": {
+      "audioDuration": 29.5,
+      "totalSeconds": 32,
+      "frames": 947
+    },
+    "point-5": {
+      "audioDuration": 31.8,
+      "totalSeconds": 34,
+      "frames": 1014
+    },
+    "quiz": {
+      "audioDuration": 19.5,
+      "totalSeconds": 22,
+      "frames": 647
+    },
+    "outro": {
+      "audioDuration": 26.5,
+      "totalSeconds": 29,
+      "frames": 855
+    }
+  }
+}

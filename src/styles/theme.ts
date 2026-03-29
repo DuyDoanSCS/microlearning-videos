@@ -82,7 +82,7 @@ export const theme = {
     width: 1080,      // Vertical format cho mobile
     height: 1920,
     fps: 30,
-    durationInSeconds: 179,
+    durationInSeconds: 227,
   },
 } as const;
 

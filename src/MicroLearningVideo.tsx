@@ -7,24 +7,27 @@ import { KeyPoint } from './components/KeyPoint';
 import { QuizCard } from './components/QuizCard';
 import { MicroOutro } from './components/MicroOutro';
 import { theme } from './styles/theme';
+import audioDurations from './audioDurations.json';
 
 // ============================================================
-// BÀI HỌC: "5 Bước Viết Email Chuyên Nghiệp" — v4
-// Đối tượng: Sinh viên đại học năm 1-2
-// Thời lượng: ~179s (≈3:00) — 0 dead time
-// Voiceover: Tiếng Việt (vi-VN-HoaiMyNeural)
-// Nâng cấp v4:
-//   - Heading colors riêng cho mỗi bước (Attention Theory)
-//   - Tip card ở cuối mỗi KeyPoint
-//   - TransitionSeries fade 0.5s giữa sections
-//   - Visual recap ở Outro (Forgetting Curve)
-//   - Quiz rút gọn, không dead time
+// BÀI HỌC: "5 Bước Viết Email Chuyên Nghiệp" — v4-fixed
+// 
+// BÀI HỌC QUAN TRỌNG (2026-03-29):
+//   ❌ KHÔNG hardcode durationInFrames
+//   ✅ Luôn dùng audioDurations.json (từ build-durations.js)
+//   Pipeline: generate-tts → build-durations → render
+//
+// Thời lượng: ~227s (~3:47) — audio-driven, 0 dead time
 // ============================================================
 
-const fps = 30;
-const TRANSITION_FRAMES = 15; // 0.5s fade transition
-
+const TRANSITION_FRAMES = audioDurations._meta.transitionFrames;
 const headingColors = theme.colors.headingColors;
+
+// Lấy frames từ config thực tế
+const getDuration = (sectionId: string): number => {
+  const section = (audioDurations.sections as Record<string, { frames: number }>)[sectionId];
+  return section?.frames ?? 30 * 30; // fallback 30s
+};
 
 const lessonData = {
   intro: {
@@ -33,7 +36,7 @@ const lessonData = {
     lessonNumber: 'Bài 01 · Kỹ năng mềm (Soft Skills)',
     emoji: '✉️',
     audio: 'audio/intro.mp3',
-    duration: 8 * fps,
+    duration: getDuration('intro'),
   },
 
   keyPoints: [
@@ -46,7 +49,7 @@ const lessonData = {
       illustration: 'images/step1-subject.png',
       headingColor: headingColors[0],
       tip: 'Hãy viết tiêu đề cuối cùng, sau khi hoàn thành nội dung email.',
-      duration: 26 * fps,
+      duration: getDuration('point-1'),
     },
     {
       icon: '👋',
@@ -57,7 +60,7 @@ const lessonData = {
       illustration: 'images/step2-greeting.png',
       headingColor: headingColors[1],
       tip: 'Với giảng viên chưa quen, hãy giới thiệu kỹ hơn để tạo ấn tượng tốt.',
-      duration: 26 * fps,
+      duration: getDuration('point-2'),
     },
     {
       icon: '📝',
@@ -68,7 +71,7 @@ const lessonData = {
       illustration: 'images/step3-body.png',
       headingColor: headingColors[2],
       tip: 'Quy tắc vàng: Email dài hơn 5 câu → hãy dùng bullet points.',
-      duration: 26 * fps,
+      duration: getDuration('point-3'),
     },
     {
       icon: '✍️',
@@ -79,7 +82,7 @@ const lessonData = {
       illustration: 'images/step4-closing.png',
       headingColor: headingColors[3],
       tip: 'Tránh dùng từ viết tắt — hãy dùng ngôn ngữ trang trọng và chuyên nghiệp.',
-      duration: 26 * fps,
+      duration: getDuration('point-4'),
     },
     {
       icon: '🔍',
@@ -90,7 +93,7 @@ const lessonData = {
       illustration: 'images/step5-review.png',
       headingColor: headingColors[4],
       tip: 'Mẹo nhanh: Đọc to email trước khi gửi — phát hiện lỗi dễ hơn!',
-      duration: 26 * fps,
+      duration: getDuration('point-5'),
     },
   ],
 
@@ -105,7 +108,7 @@ const lessonData = {
     correctIndex: 1,
     explanation: 'Tiêu đề ngắn gọn, cụ thể, có thông tin định danh → Chuyên nghiệp!',
     audio: 'audio/quiz.mp3',
-    duration: 20 * fps,
+    duration: getDuration('quiz'),
   },
 
   outro: {
@@ -114,7 +117,7 @@ const lessonData = {
     nextLesson: 'Cách trình bày (Presentation) hiệu quả',
     channelName: 'Microlearning · Đại học',
     audio: 'audio/outro.mp3',
-    duration: 24 * fps,
+    duration: getDuration('outro'),
     recapSteps: [
       { icon: '📌', text: 'Tiêu đề rõ ràng', color: headingColors[0] },
       { icon: '👋', text: 'Chào hỏi lịch sự', color: headingColors[1] },
@@ -141,13 +144,12 @@ export const MicroLearningVideo: React.FC = () => {
         </>
       </TransitionSeries.Sequence>
 
-      {/* TRANSITION: Intro → KeyPoint 1 */}
       <TransitionSeries.Transition
         presentation={fade()}
         timing={linearTiming({ durationInFrames: TRANSITION_FRAMES })}
       />
 
-      {/* 5 KEY POINTS with transitions */}
+      {/* 5 KEY POINTS */}
       {lessonData.keyPoints.map((point, index) => (
         <React.Fragment key={index}>
           <TransitionSeries.Sequence durationInFrames={point.duration}>
@@ -162,11 +164,11 @@ export const MicroLearningVideo: React.FC = () => {
                 illustration={point.illustration}
                 headingColor={point.headingColor}
                 tip={point.tip}
+                totalFrames={point.duration}
               />
             </>
           </TransitionSeries.Sequence>
 
-          {/* TRANSITION between points / to quiz */}
           <TransitionSeries.Transition
             presentation={fade()}
             timing={linearTiming({ durationInFrames: TRANSITION_FRAMES })}
@@ -183,18 +185,17 @@ export const MicroLearningVideo: React.FC = () => {
             options={lessonData.quiz.options}
             correctIndex={lessonData.quiz.correctIndex}
             explanation={lessonData.quiz.explanation}
-            revealAtFrame={12 * fps}
+            revealAtFrame={Math.floor(lessonData.quiz.duration * 0.6)}
           />
         </>
       </TransitionSeries.Sequence>
 
-      {/* TRANSITION: Quiz → Outro */}
       <TransitionSeries.Transition
         presentation={fade()}
         timing={linearTiming({ durationInFrames: TRANSITION_FRAMES })}
       />
 
-      {/* OUTRO with visual recap */}
+      {/* OUTRO */}
       <TransitionSeries.Sequence durationInFrames={lessonData.outro.duration}>
         <>
           <Audio src={staticFile(lessonData.outro.audio)} />
@@ -203,6 +204,7 @@ export const MicroLearningVideo: React.FC = () => {
             nextLesson={lessonData.outro.nextLesson}
             channelName={lessonData.outro.channelName}
             recapSteps={lessonData.outro.recapSteps}
+            totalFrames={lessonData.outro.duration}
           />
         </>
       </TransitionSeries.Sequence>

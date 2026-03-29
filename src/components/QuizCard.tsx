@@ -13,20 +13,24 @@ interface QuizCardProps {
   options: string[];
   correctIndex: number;
   revealAtFrame?: number;
-  explanation?: string; // Giải thích ngắn sau reveal
+  explanation?: string;
 }
 
 export const QuizCard: React.FC<QuizCardProps> = ({
   question,
   options,
   correctIndex,
-  revealAtFrame = 120,
+  revealAtFrame = 360,
   explanation,
 }) => {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
+  const { fps, durationInFrames } = useVideoConfig();
 
   const isRevealed = frame >= revealAtFrame;
+
+  // Fade-out cuối section — tỉ lệ %
+  const fadeOutStart = Math.floor(durationInFrames * 0.88);
+  const fadeOutEnd = Math.floor(durationInFrames * 0.96);
 
   const questionSlide = spring({
     frame: frame - 5,
@@ -41,7 +45,6 @@ export const QuizCard: React.FC<QuizCardProps> = ({
     { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }
   );
 
-  // Explanation text animation — hiện sau reveal
   const explanationFade = interpolate(
     frame,
     [revealAtFrame + 15, revealAtFrame + 30],
@@ -55,15 +58,13 @@ export const QuizCard: React.FC<QuizCardProps> = ({
     config: { damping: 14 },
   });
 
-  // Celebration sparkle
   const sparkleScale = spring({
     frame: frame - (revealAtFrame + 5),
     fps,
     config: { damping: 8, mass: 0.5 },
   });
 
-  // Fade-out cuối section
-  const fadeOut = interpolate(frame, [540, 590], [1, 0], {
+  const fadeOut = interpolate(frame, [fadeOutStart, fadeOutEnd], [1, 0], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
@@ -112,9 +113,7 @@ export const QuizCard: React.FC<QuizCardProps> = ({
           style={{
             height: '100%',
             width: `${timerProgress}%`,
-            background: timerProgress > 30
-              ? theme.colors.accent
-              : theme.colors.accentRed,
+            background: timerProgress > 30 ? theme.colors.accent : theme.colors.accentRed,
             borderRadius: 3,
           }}
         />
@@ -139,22 +138,10 @@ export const QuizCard: React.FC<QuizCardProps> = ({
       </div>
 
       {/* Options */}
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: theme.spacing.sm,
-          width: '85%',
-        }}
-      >
+      <div style={{ display: 'flex', flexDirection: 'column', gap: theme.spacing.sm, width: '85%' }}>
         {options.map((option, index) => {
           const optionDelay = 20 + index * 8;
-          const optionSpring = spring({
-            frame: frame - optionDelay,
-            fps,
-            config: { damping: 14 },
-          });
-
+          const optionSpring = spring({ frame: frame - optionDelay, fps, config: { damping: 14 } });
           const isCorrect = index === correctIndex;
           const labels = ['A', 'B', 'C', 'D'];
 
@@ -178,9 +165,7 @@ export const QuizCard: React.FC<QuizCardProps> = ({
             <div
               key={index}
               style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: theme.spacing.sm,
+                display: 'flex', alignItems: 'center', gap: theme.spacing.sm,
                 background: bgColor,
                 border: `2px solid ${borderColor}`,
                 borderRadius: theme.borderRadius.md,
@@ -191,19 +176,12 @@ export const QuizCard: React.FC<QuizCardProps> = ({
             >
               <div
                 style={{
-                  width: 40,
-                  height: 40,
+                  width: 40, height: 40,
                   borderRadius: theme.borderRadius.sm,
-                  background: isRevealed && isCorrect
-                    ? theme.colors.accentGreen
-                    : theme.colors.primary,
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
+                  background: isRevealed && isCorrect ? theme.colors.accentGreen : theme.colors.primary,
+                  display: 'flex', justifyContent: 'center', alignItems: 'center',
                   fontSize: theme.fontSizes.body - 2,
-                  fontWeight: 700,
-                  color: theme.colors.textWhite,
-                  flexShrink: 0,
+                  fontWeight: 700, color: theme.colors.textWhite, flexShrink: 0,
                 }}
               >
                 {isRevealed && isCorrect ? '✓' : labels[index]}
@@ -222,13 +200,11 @@ export const QuizCard: React.FC<QuizCardProps> = ({
         })}
       </div>
 
-      {/* Celebration sparkle after reveal */}
+      {/* Celebration sparkle */}
       {isRevealed && (
         <div
           style={{
-            position: 'absolute',
-            top: 60,
-            right: 60,
+            position: 'absolute', top: 60, right: 60,
             fontSize: 48,
             transform: `scale(${sparkleScale}) rotate(${frame * 2}deg)`,
             opacity: interpolate(sparkleScale, [0, 1], [0, 0.8]),
@@ -238,13 +214,11 @@ export const QuizCard: React.FC<QuizCardProps> = ({
         </div>
       )}
 
-      {/* Explanation text — hiện sau reveal */}
+      {/* Explanation */}
       {isRevealed && explanation && (
         <div
           style={{
-            position: 'absolute',
-            bottom: 100,
-            width: '80%',
+            position: 'absolute', bottom: 100, width: '80%',
             opacity: explanationFade,
             transform: `translateY(${interpolate(explanationSlide, [0, 1], [20, 0])}px)`,
           }}

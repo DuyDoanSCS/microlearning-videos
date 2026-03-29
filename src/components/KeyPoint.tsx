@@ -18,7 +18,8 @@ interface KeyPointProps {
   icon?: string;
   illustration?: string;
   headingColor?: string;
-  tip?: string; // Mẹo/tip hiện ở cuối
+  tip?: string;
+  totalFrames?: number; // Tổng frames của section (từ audioDurations)
 }
 
 export const KeyPoint: React.FC<KeyPointProps> = ({
@@ -30,11 +31,17 @@ export const KeyPoint: React.FC<KeyPointProps> = ({
   illustration,
   headingColor,
   tip,
+  totalFrames = 780,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  // Staggered animations
+  // === ANIMATIONS DỰA TRÊN TỈ LỆ % (không hardcode frame) ===
+  const tipStartFrame = Math.floor(totalFrames * 0.82);  // Tip xuất hiện ở 82%
+  const fadeOutStart = Math.floor(totalFrames * 0.92);    // Fade-out ở 92%
+  const fadeOutEnd = Math.floor(totalFrames * 0.98);      // Kết thúc fade ở 98%
+
+  // Staggered animations (đầu section — giữ nguyên)
   const cardSlide = spring({
     frame: frame - 5,
     fps,
@@ -58,7 +65,7 @@ export const KeyPoint: React.FC<KeyPointProps> = ({
     extrapolateRight: 'clamp',
   });
 
-  // Illustration animation — fade in + scale up after description
+  // Illustration animation
   const illustrationScale = spring({
     frame: frame - 50,
     fps,
@@ -70,23 +77,27 @@ export const KeyPoint: React.FC<KeyPointProps> = ({
     extrapolateRight: 'clamp',
   });
 
-  // Tip card animation — hiện ở cuối (frame 600+)
+  // Tip card — dùng tỉ lệ %
   const tipSlide = spring({
-    frame: frame - 580,
+    frame: frame - tipStartFrame,
     fps,
     config: { damping: 14, mass: 0.8 },
   });
 
-  const tipFade = interpolate(frame, [570, 600], [0, 1], {
-    extrapolateLeft: 'clamp',
-    extrapolateRight: 'clamp',
-  });
+  const tipFade = interpolate(
+    frame,
+    [tipStartFrame - 10, tipStartFrame + 15],
+    [0, 1],
+    { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }
+  );
 
-  // Fade-out cuối section cho transition mượt (frame 720-780)
-  const fadeOut = interpolate(frame, [720, 770], [1, 0], {
-    extrapolateLeft: 'clamp',
-    extrapolateRight: 'clamp',
-  });
+  // Fade-out — dùng tỉ lệ %
+  const fadeOut = interpolate(
+    frame,
+    [fadeOutStart, fadeOutEnd],
+    [1, 0],
+    { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }
+  );
 
   const progressWidth = interpolate(
     frame,
@@ -115,13 +126,11 @@ export const KeyPoint: React.FC<KeyPointProps> = ({
         opacity: fadeOut,
       }}
     >
-      {/* Progress bar at top */}
+      {/* Progress bar */}
       <div
         style={{
           position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
+          top: 0, left: 0, right: 0,
           height: 6,
           background: theme.colors.bgDarkAlt,
         }}
@@ -132,7 +141,6 @@ export const KeyPoint: React.FC<KeyPointProps> = ({
             width: `${progressWidth}%`,
             background: theme.gradients.primary,
             borderRadius: '0 3px 3px 0',
-            transition: 'width 0.3s',
           }}
         />
       </div>
@@ -141,8 +149,7 @@ export const KeyPoint: React.FC<KeyPointProps> = ({
       <div
         style={{
           position: 'absolute',
-          top: 30,
-          right: 40,
+          top: 30, right: 40,
           transform: `scale(${numberPop})`,
           background: theme.colors.bgGlass,
           backdropFilter: 'blur(10px)',
@@ -172,18 +179,10 @@ export const KeyPoint: React.FC<KeyPointProps> = ({
           marginTop: 30,
         }}
       >
-        {/* Icon */}
-        <div
-          style={{
-            fontSize: 56,
-            marginBottom: theme.spacing.sm,
-            transform: `scale(${iconBounce})`,
-          }}
-        >
+        <div style={{ fontSize: 56, marginBottom: theme.spacing.sm, transform: `scale(${iconBounce})` }}>
           {icon}
         </div>
 
-        {/* Title — với heading color riêng */}
         <div
           style={{
             fontSize: theme.fontSizes.heading,
@@ -198,7 +197,6 @@ export const KeyPoint: React.FC<KeyPointProps> = ({
           {title}
         </div>
 
-        {/* Description */}
         <div
           style={{
             fontSize: theme.fontSizes.body - 2,
@@ -212,7 +210,7 @@ export const KeyPoint: React.FC<KeyPointProps> = ({
         </div>
       </div>
 
-      {/* INFOGRAPHIC ILLUSTRATION */}
+      {/* Infographic */}
       {illustration && (
         <div
           style={{
@@ -228,17 +226,13 @@ export const KeyPoint: React.FC<KeyPointProps> = ({
         >
           <Img
             src={staticFile(illustration)}
-            style={{
-              width: '100%',
-              height: 'auto',
-              display: 'block',
-            }}
+            style={{ width: '100%', height: 'auto', display: 'block' }}
           />
         </div>
       )}
 
-      {/* 💡 TIP CARD — xuất hiện ở cuối section */}
-      {tip && frame >= 560 && (
+      {/* 💡 TIP CARD — tỉ lệ % */}
+      {tip && frame >= tipStartFrame - 10 && (
         <div
           style={{
             position: 'absolute',
@@ -274,7 +268,7 @@ export const KeyPoint: React.FC<KeyPointProps> = ({
         </div>
       )}
 
-      {/* Bottom decorative dots */}
+      {/* Bottom dots */}
       <div
         style={{
           position: 'absolute',
@@ -290,11 +284,7 @@ export const KeyPoint: React.FC<KeyPointProps> = ({
               width: i + 1 === pointNumber ? 32 : 10,
               height: 10,
               borderRadius: theme.borderRadius.full,
-              background:
-                i + 1 === pointNumber
-                  ? resolvedHeadingColor
-                  : theme.colors.bgCard,
-              transition: 'all 0.3s',
+              background: i + 1 === pointNumber ? resolvedHeadingColor : theme.colors.bgCard,
             }}
           />
         ))}
