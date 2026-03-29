@@ -6,7 +6,22 @@ import {
   spring,
   useVideoConfig,
 } from 'remotion';
-import { theme } from '../styles/theme';
+import { theme as defaultTheme } from '../styles/theme';
+
+// Colors interface — cho phép truyền theme dynamic
+interface ThemeColors {
+  primary: string;
+  accent: string;
+  accentGreen: string;
+  accentRed: string;
+  bgDark: string;
+  bgCard: string;
+  bgGlass: string;
+  textWhite: string;
+  textLight: string;
+  textMuted: string;
+  gradientDark?: string;
+}
 
 interface QuizCardProps {
   question: string;
@@ -14,6 +29,7 @@ interface QuizCardProps {
   correctIndex: number;
   revealAtFrame?: number;
   explanation?: string;
+  colors?: ThemeColors; // ← DYNAMIC THEME
 }
 
 export const QuizCard: React.FC<QuizCardProps> = ({
@@ -22,9 +38,27 @@ export const QuizCard: React.FC<QuizCardProps> = ({
   correctIndex,
   revealAtFrame = 360,
   explanation,
+  colors,
 }) => {
   const frame = useCurrentFrame();
   const { fps, durationInFrames } = useVideoConfig();
+
+  // Theme: dùng colors prop nếu có, fallback theme.ts
+  const c: ThemeColors = colors || {
+    primary: defaultTheme.colors.primary,
+    accent: defaultTheme.colors.accent,
+    accentGreen: defaultTheme.colors.accentGreen,
+    accentRed: defaultTheme.colors.accentRed,
+    bgDark: defaultTheme.colors.bgDark,
+    bgCard: defaultTheme.colors.bgCard,
+    bgGlass: defaultTheme.colors.bgGlass,
+    textWhite: defaultTheme.colors.textWhite,
+    textLight: defaultTheme.colors.textLight,
+    textMuted: defaultTheme.colors.textMuted,
+    gradientDark: defaultTheme.gradients.dark,
+  };
+
+  const gradientDark = c.gradientDark || defaultTheme.gradients.dark;
 
   const isRevealed = frame >= revealAtFrame;
 
@@ -72,11 +106,11 @@ export const QuizCard: React.FC<QuizCardProps> = ({
   return (
     <AbsoluteFill
       style={{
-        background: theme.gradients.dark,
+        background: gradientDark,
         justifyContent: 'center',
         alignItems: 'center',
-        fontFamily: theme.fonts.heading,
-        padding: theme.spacing.xl,
+        fontFamily: defaultTheme.fonts.heading,
+        padding: defaultTheme.spacing.xl,
         opacity: fadeOut,
       }}
     >
@@ -85,12 +119,12 @@ export const QuizCard: React.FC<QuizCardProps> = ({
         style={{
           position: 'absolute',
           top: 80,
-          background: theme.colors.accent,
+          background: c.accent,
           padding: '10px 28px',
-          borderRadius: theme.borderRadius.full,
-          fontSize: theme.fontSizes.caption,
+          borderRadius: defaultTheme.borderRadius.full,
+          fontSize: defaultTheme.fontSizes.caption,
           fontWeight: 700,
-          color: theme.colors.bgDark,
+          color: c.bgDark,
           transform: `scale(${spring({ frame: frame - 3, fps, config: { damping: 10 } })})`,
         }}
       >
@@ -104,7 +138,7 @@ export const QuizCard: React.FC<QuizCardProps> = ({
           top: 160,
           width: '80%',
           height: 6,
-          background: theme.colors.bgCard,
+          background: c.bgCard,
           borderRadius: 3,
           overflow: 'hidden',
         }}
@@ -113,7 +147,7 @@ export const QuizCard: React.FC<QuizCardProps> = ({
           style={{
             height: '100%',
             width: `${timerProgress}%`,
-            background: timerProgress > 30 ? theme.colors.accent : theme.colors.accentRed,
+            background: timerProgress > 30 ? c.accent : c.accentRed,
             borderRadius: 3,
           }}
         />
@@ -122,14 +156,14 @@ export const QuizCard: React.FC<QuizCardProps> = ({
       {/* Question */}
       <div
         style={{
-          fontSize: theme.fontSizes.heading - 4,
+          fontSize: defaultTheme.fontSizes.heading - 4,
           fontWeight: 700,
-          color: theme.colors.textWhite,
+          color: c.textWhite,
           textAlign: 'center',
           maxWidth: '85%',
           lineHeight: 1.4,
           marginTop: 40,
-          marginBottom: theme.spacing.lg,
+          marginBottom: defaultTheme.spacing.lg,
           transform: `translateY(${interpolate(questionSlide, [0, 1], [50, 0])}px)`,
           opacity: questionSlide,
         }}
@@ -138,26 +172,26 @@ export const QuizCard: React.FC<QuizCardProps> = ({
       </div>
 
       {/* Options */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: theme.spacing.sm, width: '85%' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: defaultTheme.spacing.sm, width: '85%' }}>
         {options.map((option, index) => {
           const optionDelay = 20 + index * 8;
           const optionSpring = spring({ frame: frame - optionDelay, fps, config: { damping: 14 } });
           const isCorrect = index === correctIndex;
           const labels = ['A', 'B', 'C', 'D'];
 
-          let bgColor = theme.colors.bgGlass;
-          let borderColor = `${theme.colors.primary}44`;
-          let textColor = theme.colors.textWhite;
+          let bgColor = c.bgGlass;
+          let borderColor = `${c.primary}44`;
+          let textColor = c.textWhite;
 
           if (isRevealed) {
             if (isCorrect) {
-              bgColor = `${theme.colors.accentGreen}22`;
-              borderColor = theme.colors.accentGreen;
-              textColor = theme.colors.accentGreen;
+              bgColor = `${c.accentGreen}22`;
+              borderColor = c.accentGreen;
+              textColor = c.accentGreen;
             } else {
-              bgColor = `${theme.colors.accentRed}11`;
-              borderColor = `${theme.colors.accentRed}44`;
-              textColor = theme.colors.textMuted;
+              bgColor = `${c.accentRed}11`;
+              borderColor = `${c.accentRed}44`;
+              textColor = c.textMuted;
             }
           }
 
@@ -165,10 +199,10 @@ export const QuizCard: React.FC<QuizCardProps> = ({
             <div
               key={index}
               style={{
-                display: 'flex', alignItems: 'center', gap: theme.spacing.sm,
+                display: 'flex', alignItems: 'center', gap: defaultTheme.spacing.sm,
                 background: bgColor,
                 border: `2px solid ${borderColor}`,
-                borderRadius: theme.borderRadius.md,
+                borderRadius: defaultTheme.borderRadius.md,
                 padding: '14px 20px',
                 transform: `translateX(${interpolate(optionSpring, [0, 1], [-60, 0])}px)`,
                 opacity: optionSpring,
@@ -177,18 +211,18 @@ export const QuizCard: React.FC<QuizCardProps> = ({
               <div
                 style={{
                   width: 40, height: 40,
-                  borderRadius: theme.borderRadius.sm,
-                  background: isRevealed && isCorrect ? theme.colors.accentGreen : theme.colors.primary,
+                  borderRadius: defaultTheme.borderRadius.sm,
+                  background: isRevealed && isCorrect ? c.accentGreen : c.primary,
                   display: 'flex', justifyContent: 'center', alignItems: 'center',
-                  fontSize: theme.fontSizes.body - 2,
-                  fontWeight: 700, color: theme.colors.textWhite, flexShrink: 0,
+                  fontSize: defaultTheme.fontSizes.body - 2,
+                  fontWeight: 700, color: c.textWhite, flexShrink: 0,
                 }}
               >
                 {isRevealed && isCorrect ? '✓' : labels[index]}
               </div>
               <div
                 style={{
-                  fontSize: theme.fontSizes.body - 4,
+                  fontSize: defaultTheme.fontSizes.body - 4,
                   color: textColor,
                   fontWeight: isRevealed && isCorrect ? 700 : 400,
                 }}
@@ -225,17 +259,17 @@ export const QuizCard: React.FC<QuizCardProps> = ({
         >
           <div
             style={{
-              background: `${theme.colors.accentGreen}15`,
-              border: `1px solid ${theme.colors.accentGreen}44`,
-              borderRadius: theme.borderRadius.md,
+              background: `${c.accentGreen}15`,
+              border: `1px solid ${c.accentGreen}44`,
+              borderRadius: defaultTheme.borderRadius.md,
               padding: '14px 20px',
               textAlign: 'center',
             }}
           >
             <div
               style={{
-                fontSize: theme.fontSizes.small + 2,
-                color: theme.colors.accentGreen,
+                fontSize: defaultTheme.fontSizes.small + 2,
+                color: c.accentGreen,
                 lineHeight: 1.5,
                 fontWeight: 500,
               }}

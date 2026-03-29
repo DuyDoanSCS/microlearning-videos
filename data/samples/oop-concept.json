@@ -16,11 +16,13 @@
 
   "learning_objectives": [
     "Hiểu được khái niệm lập trình hướng đối tượng (OOP)",
-    "Phân biệt được 4 đặc tính cốt lõi của OOP"
+    "Phân biệt được Class (Lớp) và Object (Đối tượng)",
+    "Biết được 4 đặc tính cốt lõi của OOP"
   ],
 
   "sections": [
     {
+      "id": "hook",
       "type": "hook",
       "emoji": "🤔",
       "hook_stat": "90%",
@@ -29,6 +31,7 @@
       "subtitle": "Lập trình hướng đối tượng cho người mới bắt đầu"
     },
     {
+      "id": "definition",
       "type": "definition",
       "icon": "📖",
       "term": "OOP",
@@ -37,18 +40,22 @@
       "keywords": ["Đối tượng", "Thuộc tính", "Phương thức", "Lớp", "Kế thừa"]
     },
     {
-      "type": "visual_explain",
+      "id": "visual",
+      "type": "visual",
       "analogy": "OOP giống như một bản thiết kế nhà. Lớp (Class) là bản vẽ, còn mỗi ngôi nhà xây ra chính là một Đối tượng (Object) với màu sơn, số phòng khác nhau.",
       "content": "Hãy tưởng tượng bạn có bản thiết kế một chiếc xe:\n\n🚗 Lớp Xe:\n• Thuộc tính: màu sắc, tốc độ tối đa, số chỗ ngồi\n• Phương thức: khởi động, tăng tốc, phanh\n\nMỗi chiếc xe cụ thể trên đường là một Đối tượng được tạo từ Lớp Xe.",
       "illustration_prompt": "Infographic showing Class vs Object concept with car blueprint analogy, clean modern style"
     },
     {
+      "id": "example",
       "type": "example",
       "icon": "🔗",
       "title": "Ví dụ trong ứng dụng Grab",
+      "analogy": "Ứng dụng Grab: Mỗi tài xế = 1 Object TàiXế, mỗi khách = 1 Object KháchHàng.",
       "content": "Trong ứng dụng Grab, mỗi thành phần là một đối tượng:\n\n👤 Lớp TàiXế:\n• Thuộc tính: tên, biển số xe, đánh giá\n• Phương thức: nhậnĐơn(), diChuyển()\n\n📱 Lớp KháchHàng:\n• Thuộc tính: tên, vị trí, phương thức thanh toán\n• Phương thức: đặtXe(), đánhGiá()\n\nMỗi tài xế và khách hàng thực tế là một Object riêng biệt."
     },
     {
+      "id": "application",
       "type": "application",
       "title": "Tại sao phải học OOP?",
       "applications": [
@@ -59,6 +66,7 @@
       ]
     },
     {
+      "id": "quiz",
       "type": "quiz",
       "question": "Trong OOP, Class là gì?",
       "options": [
@@ -71,7 +79,9 @@
       "explanation": "Class là bản thiết kế (blueprint) chứa thuộc tính và phương thức. Object là thực thể cụ thể được tạo từ Class."
     },
     {
+      "id": "recap",
       "type": "recap",
+      "summary": "OOP = Tổ chức code thành đối tượng.\nClass = Bản thiết kế.\nObject = Thực thể cụ thể.",
       "recap_points": [
         "OOP = Tổ chức code thành đối tượng",
         "Class = Bản thiết kế",

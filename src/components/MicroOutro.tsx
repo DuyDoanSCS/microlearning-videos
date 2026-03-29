@@ -6,7 +6,20 @@ import {
   spring,
   useVideoConfig,
 } from 'remotion';
-import { theme } from '../styles/theme';
+import { theme as defaultTheme } from '../styles/theme';
+
+// Colors interface — cho phép truyền theme dynamic
+interface ThemeColors {
+  primary: string;
+  primaryLight?: string;
+  accent?: string;
+  bgDark: string;
+  bgGlass: string;
+  textWhite: string;
+  textMuted: string;
+  gradientPrimary?: string;
+  gradientDark?: string;
+}
 
 interface MicroOutroProps {
   summary: string;
@@ -14,6 +27,7 @@ interface MicroOutroProps {
   channelName?: string;
   recapSteps?: Array<{ icon: string; text: string; color: string }>;
   totalFrames?: number;
+  colors?: ThemeColors; // ← DYNAMIC THEME
 }
 
 export const MicroOutro: React.FC<MicroOutroProps> = ({
@@ -22,9 +36,26 @@ export const MicroOutro: React.FC<MicroOutroProps> = ({
   channelName = 'Microlearning',
   recapSteps = [],
   totalFrames = 720,
+  colors,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+
+  // Theme: dùng colors prop nếu có, fallback theme.ts
+  const c: ThemeColors = colors || {
+    primary: defaultTheme.colors.primary,
+    primaryLight: defaultTheme.colors.primaryLight,
+    bgDark: defaultTheme.colors.bgDark,
+    bgGlass: defaultTheme.colors.bgGlass,
+    textWhite: defaultTheme.colors.textWhite,
+    textMuted: defaultTheme.colors.textMuted,
+    gradientPrimary: defaultTheme.gradients.primary,
+    gradientDark: defaultTheme.gradients.dark,
+  };
+
+  const gradientDark = c.gradientDark || defaultTheme.gradients.dark;
+  const gradientPrimary = c.gradientPrimary || defaultTheme.gradients.primary;
+  const primaryLight = c.primaryLight || c.primary;
 
   // Tỉ lệ % cho animations
   const ctaStartFrame = Math.floor(totalFrames * 0.55);
@@ -58,11 +89,11 @@ export const MicroOutro: React.FC<MicroOutroProps> = ({
   return (
     <AbsoluteFill
       style={{
-        background: theme.gradients.dark,
+        background: gradientDark,
         justifyContent: 'center',
         alignItems: 'center',
-        fontFamily: theme.fonts.heading,
-        padding: theme.spacing.xl,
+        fontFamily: defaultTheme.fonts.heading,
+        padding: defaultTheme.spacing.xl,
         opacity: fadeOut,
       }}
     >
@@ -71,12 +102,12 @@ export const MicroOutro: React.FC<MicroOutroProps> = ({
         style={{
           width: 100, height: 100,
           borderRadius: '50%',
-          background: theme.gradients.primary,
+          background: gradientPrimary,
           display: 'flex', justifyContent: 'center', alignItems: 'center',
           fontSize: 52,
           transform: `scale(${checkScale})`,
-          boxShadow: `0 0 40px ${theme.colors.primary}44`,
-          marginBottom: theme.spacing.md,
+          boxShadow: `0 0 40px ${c.primary}44`,
+          marginBottom: defaultTheme.spacing.md,
         }}
       >
         ✅
@@ -84,23 +115,23 @@ export const MicroOutro: React.FC<MicroOutroProps> = ({
 
       <div
         style={{
-          fontSize: theme.fontSizes.heading - 4,
+          fontSize: defaultTheme.fontSizes.heading - 4,
           fontWeight: 800,
-          color: theme.colors.textWhite,
+          color: c.textWhite,
           opacity: titleFade,
-          marginBottom: theme.spacing.md,
+          marginBottom: defaultTheme.spacing.md,
         }}
       >
         Hoàn thành bài học!
       </div>
 
-      {/* VISUAL RECAP — 5 bước tuần tự */}
+      {/* VISUAL RECAP — tuần tự */}
       {recapSteps.length > 0 && (
         <div
           style={{
             display: 'flex', flexDirection: 'column',
             gap: 10, width: '88%',
-            marginBottom: theme.spacing.md,
+            marginBottom: defaultTheme.spacing.md,
           }}
         >
           {recapSteps.map((step, index) => {
@@ -136,7 +167,7 @@ export const MicroOutro: React.FC<MicroOutroProps> = ({
                 </div>
                 <div
                   style={{
-                    fontSize: theme.fontSizes.body - 4,
+                    fontSize: defaultTheme.fontSizes.body - 4,
                     color: step.color,
                     fontWeight: 600,
                   }}
@@ -153,9 +184,9 @@ export const MicroOutro: React.FC<MicroOutroProps> = ({
       {nextLesson && (
         <div
           style={{
-            background: theme.colors.bgGlass,
-            border: `1px solid ${theme.colors.primary}33`,
-            borderRadius: theme.borderRadius.lg,
+            background: c.bgGlass,
+            border: `1px solid ${c.primary}33`,
+            borderRadius: defaultTheme.borderRadius.lg,
             padding: '16px 28px',
             transform: `translateY(${interpolate(ctaSlide, [0, 1], [40, 0])}px) scale(${frame > ctaStartFrame + 30 ? ctaPulse : 1})`,
             opacity: ctaSlide,
@@ -165,8 +196,8 @@ export const MicroOutro: React.FC<MicroOutroProps> = ({
         >
           <div
             style={{
-              fontSize: theme.fontSizes.small,
-              color: theme.colors.textMuted,
+              fontSize: defaultTheme.fontSizes.small,
+              color: c.textMuted,
               marginBottom: 6,
               textTransform: 'uppercase',
               letterSpacing: 2,
@@ -176,9 +207,9 @@ export const MicroOutro: React.FC<MicroOutroProps> = ({
           </div>
           <div
             style={{
-              fontSize: theme.fontSizes.subtitle - 4,
+              fontSize: defaultTheme.fontSizes.subtitle - 4,
               fontWeight: 700,
-              color: theme.colors.primaryLight,
+              color: primaryLight,
             }}
           >
             {nextLesson}
@@ -191,8 +222,8 @@ export const MicroOutro: React.FC<MicroOutroProps> = ({
         style={{
           position: 'absolute',
           bottom: 60,
-          fontSize: theme.fontSizes.small,
-          color: theme.colors.textMuted,
+          fontSize: defaultTheme.fontSizes.small,
+          color: c.textMuted,
           opacity: titleFade,
         }}
       >

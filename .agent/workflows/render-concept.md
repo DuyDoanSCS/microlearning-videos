@@ -1,38 +1,46 @@
 ---
-description: Tạo video Concept Explainer từ content.json qua pipeline E2E
+description: Tạo video microlearning từ content.json qua pipeline tự động E2E
 ---
 
-# Pipeline Tạo Video Concept Explainer
+# Pipeline Tạo Video (Generic)
 
 ## Yêu cầu
-- File `data/samples/oop-concept.json` hoặc content.json tương tự
+- File content.json theo schema `data/schemas/content-schema.json`
 - Node.js + npm đã cài
 
-## Các bước
+## Lệnh duy nhất
 
-// turbo-all
-
-1. Sinh audio TTS
 ```bash
-node scripts/generate-tts-concept.js
+node scripts/pipeline.js data/samples/oop-concept.json
 ```
 
-2. Đo thời lượng audio → tạo audioDurations
+Pipeline tự động:
+1. ✅ Đọc + validate content.json
+2. ✅ Chọn theme từ `style.theme`
+3. ✅ Chạy TTS (generic) → `output/<slug>/audio/`
+4. ✅ Đo durations → `src/audioDurations-<slug>.json`
+5. ✅ Render video → `output/<slug>/<slug>-v1.mp4`
+
+## Options
+
 ```bash
-node scripts/build-durations-concept.js
+# Bỏ qua TTS (dùng audio đã có)
+node scripts/pipeline.js data/samples/oop-concept.json --skip-tts
+
+# Bỏ qua render (chỉ TTS + durations)
+node scripts/pipeline.js data/samples/oop-concept.json --skip-render
 ```
 
-3. Preview (tùy chọn)
-```bash
-npx remotion studio
-```
+## Cấu trúc output
 
-4. Render video
-```bash
-npx remotion render ConceptExplainerVideo output/oop-concept/oop-la-gi-v1.mp4
+```
+output/<lesson-slug>/
+├── audio/          ← file MP3 từ TTS
+├── images/         ← file ảnh (nếu có)
+└── <slug>-v1.mp4   ← video final
 ```
 
 ## Lưu ý
-- **KHÔNG bỏ bước 2** (build-durations). Đây là quy tắc R01 - Audio-First Duration.
-- Khi đổi nội dung TTS → phải chạy lại từ bước 1.
-- Kiểm tra video sau render: xem `/quality-check` skill.
+- Content.json PHẢI có `id` cho mỗi section
+- Theme phải tồn tại trong `data/themes/<theme-id>.json`
+- Kiểm tra video: xem skill `/quality-check`

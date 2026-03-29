@@ -3,5 +3,9 @@ dist
 .DS_Store
 .env
 
-# Ignore the output video from Git but not videos you import into src/.
+# Ignore rendered output (videos, audio, images in output/)
 out
+output/**/*.mp4
+output/**/*.mp3
+output/**/audio/
+output/**/images/

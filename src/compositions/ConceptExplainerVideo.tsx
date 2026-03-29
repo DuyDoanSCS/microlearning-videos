@@ -24,7 +24,8 @@ const BUFFER_FRAMES = 60; // 2s
 
 // Lấy duration từ audio hoặc fallback
 const getDuration = (id: string, fallbackSeconds: number): number => {
-  const section = audioDurations.sections?.[id];
+  const sections = audioDurations.sections as Record<string, { frames: number }>;
+  const section = sections[id];
   return section?.frames ?? fallbackSeconds * FPS;
 };
 
@@ -250,6 +251,19 @@ export const ConceptExplainerVideo: React.FC = () => {
             correctIndex={lessonData.quiz.correctIndex}
             explanation={lessonData.quiz.explanation}
             revealAtFrame={Math.floor(lessonData.quiz.duration * 0.6)}
+            colors={{
+              primary: colorProps.primary,
+              accent: colorProps.accent,
+              accentGreen: colorProps.accentGreen,
+              accentRed: colorProps.accentRed,
+              bgDark: colorProps.bgDark,
+              bgCard: videoTheme.colors.bgCard,
+              bgGlass: colorProps.bgGlass,
+              textWhite: colorProps.textWhite,
+              textLight: colorProps.textLight,
+              textMuted: colorProps.textMuted,
+              gradientDark: colorProps.gradientDark,
+            }}
           />
         </>
       </TransitionSeries.Sequence>
@@ -269,6 +283,16 @@ export const ConceptExplainerVideo: React.FC = () => {
             channelName={lessonData.recap.channelName}
             recapSteps={lessonData.recap.recapSteps}
             totalFrames={lessonData.recap.duration}
+            colors={{
+              primary: colorProps.primary,
+              primaryLight: videoTheme.colors.primaryLight,
+              bgDark: colorProps.bgDark,
+              bgGlass: colorProps.bgGlass,
+              textWhite: colorProps.textWhite,
+              textMuted: colorProps.textMuted,
+              gradientPrimary: colorProps.gradientPrimary,
+              gradientDark: colorProps.gradientDark,
+            }}
           />
         </>
       </TransitionSeries.Sequence>

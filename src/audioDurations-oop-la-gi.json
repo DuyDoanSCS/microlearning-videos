@@ -1,0 +1,51 @@
+{
+  "_meta": {
+    "generatedAt": "2026-03-29T11:11:24.200Z",
+    "videoType": "concept_explainer",
+    "lesson": "OOP là gì?",
+    "lessonSlug": "oop-la-gi",
+    "fps": 30,
+    "bufferSeconds": 2,
+    "transitionFrames": 15,
+    "totalDurationSeconds": 171,
+    "totalDurationFrames": 5102,
+    "audioDir": "audio/oop-la-gi"
+  },
+  "sections": {
+    "hook": {
+      "audioDuration": 12,
+      "totalSeconds": 15,
+      "frames": 421
+    },
+    "definition": {
+      "audioDuration": 18.5,
+      "totalSeconds": 21,
+      "frames": 614
+    },
+    "visual": {
+      "audioDuration": 29,
+      "totalSeconds": 32,
+      "frames": 931
+    },
+    "example": {
+      "audioDuration": 31.3,
+      "totalSeconds": 34,
+      "frames": 999
+    },
+    "application": {
+      "audioDuration": 24.2,
+      "totalSeconds": 27,
+      "frames": 786
+    },
+    "quiz": {
+      "audioDuration": 28.4,
+      "totalSeconds": 31,
+      "frames": 913
+    },
+    "recap": {
+      "audioDuration": 15.6,
+      "totalSeconds": 18,
+      "frames": 528
+    }
+  }
+}
