@@ -8,6 +8,7 @@
   "dependencies": {
     "@remotion/cli": "4.0.441",
     "@remotion/tailwind-v4": "4.0.441",
+    "@remotion/transitions": "^4.0.441",
     "edge-tts-universal": "^1.4.0",
     "msedge-tts": "^2.0.4",
     "react": "19.2.3",

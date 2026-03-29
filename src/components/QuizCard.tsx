@@ -13,6 +13,7 @@ interface QuizCardProps {
   options: string[];
   correctIndex: number;
   revealAtFrame?: number;
+  explanation?: string; // Giải thích ngắn sau reveal
 }
 
 export const QuizCard: React.FC<QuizCardProps> = ({
@@ -20,6 +21,7 @@ export const QuizCard: React.FC<QuizCardProps> = ({
   options,
   correctIndex,
   revealAtFrame = 120,
+  explanation,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -39,6 +41,33 @@ export const QuizCard: React.FC<QuizCardProps> = ({
     { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }
   );
 
+  // Explanation text animation — hiện sau reveal
+  const explanationFade = interpolate(
+    frame,
+    [revealAtFrame + 15, revealAtFrame + 30],
+    [0, 1],
+    { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }
+  );
+
+  const explanationSlide = spring({
+    frame: frame - (revealAtFrame + 15),
+    fps,
+    config: { damping: 14 },
+  });
+
+  // Celebration sparkle
+  const sparkleScale = spring({
+    frame: frame - (revealAtFrame + 5),
+    fps,
+    config: { damping: 8, mass: 0.5 },
+  });
+
+  // Fade-out cuối section
+  const fadeOut = interpolate(frame, [540, 590], [1, 0], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+  });
+
   return (
     <AbsoluteFill
       style={{
@@ -47,6 +76,7 @@ export const QuizCard: React.FC<QuizCardProps> = ({
         alignItems: 'center',
         fontFamily: theme.fonts.heading,
         padding: theme.spacing.xl,
+        opacity: fadeOut,
       }}
     >
       {/* Quiz badge */}
@@ -154,15 +184,15 @@ export const QuizCard: React.FC<QuizCardProps> = ({
                 background: bgColor,
                 border: `2px solid ${borderColor}`,
                 borderRadius: theme.borderRadius.md,
-                padding: '16px 24px',
+                padding: '14px 20px',
                 transform: `translateX(${interpolate(optionSpring, [0, 1], [-60, 0])}px)`,
                 opacity: optionSpring,
               }}
             >
               <div
                 style={{
-                  width: 44,
-                  height: 44,
+                  width: 40,
+                  height: 40,
                   borderRadius: theme.borderRadius.sm,
                   background: isRevealed && isCorrect
                     ? theme.colors.accentGreen
@@ -170,7 +200,7 @@ export const QuizCard: React.FC<QuizCardProps> = ({
                   display: 'flex',
                   justifyContent: 'center',
                   alignItems: 'center',
-                  fontSize: theme.fontSizes.body,
+                  fontSize: theme.fontSizes.body - 2,
                   fontWeight: 700,
                   color: theme.colors.textWhite,
                   flexShrink: 0,
@@ -180,7 +210,7 @@ export const QuizCard: React.FC<QuizCardProps> = ({
               </div>
               <div
                 style={{
-                  fontSize: theme.fontSizes.body - 2,
+                  fontSize: theme.fontSizes.body - 4,
                   color: textColor,
                   fontWeight: isRevealed && isCorrect ? 700 : 400,
                 }}
@@ -191,6 +221,56 @@ export const QuizCard: React.FC<QuizCardProps> = ({
           );
         })}
       </div>
+
+      {/* Celebration sparkle after reveal */}
+      {isRevealed && (
+        <div
+          style={{
+            position: 'absolute',
+            top: 60,
+            right: 60,
+            fontSize: 48,
+            transform: `scale(${sparkleScale}) rotate(${frame * 2}deg)`,
+            opacity: interpolate(sparkleScale, [0, 1], [0, 0.8]),
+          }}
+        >
+          ✨
+        </div>
+      )}
+
+      {/* Explanation text — hiện sau reveal */}
+      {isRevealed && explanation && (
+        <div
+          style={{
+            position: 'absolute',
+            bottom: 100,
+            width: '80%',
+            opacity: explanationFade,
+            transform: `translateY(${interpolate(explanationSlide, [0, 1], [20, 0])}px)`,
+          }}
+        >
+          <div
+            style={{
+              background: `${theme.colors.accentGreen}15`,
+              border: `1px solid ${theme.colors.accentGreen}44`,
+              borderRadius: theme.borderRadius.md,
+              padding: '14px 20px',
+              textAlign: 'center',
+            }}
+          >
+            <div
+              style={{
+                fontSize: theme.fontSizes.small + 2,
+                color: theme.colors.accentGreen,
+                lineHeight: 1.5,
+                fontWeight: 500,
+              }}
+            >
+              {explanation}
+            </div>
+          </div>
+        </div>
+      )}
     </AbsoluteFill>
   );
 };

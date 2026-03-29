@@ -17,6 +17,15 @@ export const theme = {
     accentGreen: '#10B981',    // Xanh lá (đáp án đúng)
     accentRed: '#EF4444',      // Đỏ (đáp án sai)
     
+    // Heading Colors — mỗi KeyPoint một màu riêng (Attention Theory)
+    headingColors: [
+      '#60A5FA',  // Bước 1: Blue Light — rõ ràng, chính xác
+      '#34D399',  // Bước 2: Emerald — thân thiện, chào đón
+      '#FBBF24',  // Bước 3: Amber — quan trọng, cốt lõi
+      '#F472B6',  // Bước 4: Pink — trang trọng, ấm áp
+      '#A78BFA',  // Bước 5: Purple — cẩn thận, rà soát
+    ] as readonly string[],
+    
     // Nền
     bgDark: '#0F172A',         // Nền tối chính (Slate 900)
     bgDarkAlt: '#1E293B',      // Nền tối phụ (Slate 800)
@@ -73,7 +82,7 @@ export const theme = {
     width: 1080,      // Vertical format cho mobile
     height: 1920,
     fps: 30,
-    durationInSeconds: 180,
+    durationInSeconds: 179,
   },
 } as const;
 

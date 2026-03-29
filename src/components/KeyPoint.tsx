@@ -16,7 +16,9 @@ interface KeyPointProps {
   title: string;
   description: string;
   icon?: string;
-  illustration?: string; // Ảnh minh họa (đường dẫn trong public/)
+  illustration?: string;
+  headingColor?: string;
+  tip?: string; // Mẹo/tip hiện ở cuối
 }
 
 export const KeyPoint: React.FC<KeyPointProps> = ({
@@ -26,6 +28,8 @@ export const KeyPoint: React.FC<KeyPointProps> = ({
   description,
   icon = '💡',
   illustration,
+  headingColor,
+  tip,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -66,6 +70,24 @@ export const KeyPoint: React.FC<KeyPointProps> = ({
     extrapolateRight: 'clamp',
   });
 
+  // Tip card animation — hiện ở cuối (frame 600+)
+  const tipSlide = spring({
+    frame: frame - 580,
+    fps,
+    config: { damping: 14, mass: 0.8 },
+  });
+
+  const tipFade = interpolate(frame, [570, 600], [0, 1], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+  });
+
+  // Fade-out cuối section cho transition mượt (frame 720-780)
+  const fadeOut = interpolate(frame, [720, 770], [1, 0], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+  });
+
   const progressWidth = interpolate(
     frame,
     [0, 20],
@@ -79,6 +101,8 @@ export const KeyPoint: React.FC<KeyPointProps> = ({
     config: { damping: 10, mass: 0.4 },
   });
 
+  const resolvedHeadingColor = headingColor || theme.colors.textWhite;
+
   return (
     <AbsoluteFill
       style={{
@@ -88,6 +112,7 @@ export const KeyPoint: React.FC<KeyPointProps> = ({
         fontFamily: theme.fonts.heading,
         padding: theme.spacing.xl,
         paddingTop: 80,
+        opacity: fadeOut,
       }}
     >
       {/* Progress bar at top */}
@@ -124,9 +149,9 @@ export const KeyPoint: React.FC<KeyPointProps> = ({
           padding: '10px 24px',
           borderRadius: theme.borderRadius.full,
           fontSize: theme.fontSizes.caption,
-          color: theme.colors.primaryLight,
+          color: resolvedHeadingColor,
           fontWeight: 600,
-          border: `1px solid ${theme.colors.primary}44`,
+          border: `1px solid ${resolvedHeadingColor}44`,
         }}
       >
         {pointNumber}/{totalPoints}
@@ -142,7 +167,7 @@ export const KeyPoint: React.FC<KeyPointProps> = ({
           borderRadius: theme.borderRadius.lg,
           padding: theme.spacing.lg,
           width: '92%',
-          border: `1px solid ${theme.colors.primary}33`,
+          border: `1px solid ${resolvedHeadingColor}33`,
           boxShadow: `0 20px 60px ${theme.colors.bgDark}88`,
           marginTop: 30,
         }}
@@ -158,12 +183,12 @@ export const KeyPoint: React.FC<KeyPointProps> = ({
           {icon}
         </div>
 
-        {/* Title */}
+        {/* Title — với heading color riêng */}
         <div
           style={{
             fontSize: theme.fontSizes.heading,
             fontWeight: 700,
-            color: theme.colors.textWhite,
+            color: resolvedHeadingColor,
             marginBottom: theme.spacing.sm,
             transform: `translateX(${interpolate(titleReveal, [0, 1], [-40, 0])}px)`,
             opacity: titleReveal,
@@ -176,7 +201,7 @@ export const KeyPoint: React.FC<KeyPointProps> = ({
         {/* Description */}
         <div
           style={{
-            fontSize: theme.fontSizes.body,
+            fontSize: theme.fontSizes.body - 2,
             color: theme.colors.textLight,
             opacity: descFade,
             lineHeight: 1.6,
@@ -191,13 +216,13 @@ export const KeyPoint: React.FC<KeyPointProps> = ({
       {illustration && (
         <div
           style={{
-            marginTop: 24,
+            marginTop: 20,
             opacity: illustrationFade,
             transform: `scale(${interpolate(illustrationScale, [0, 1], [0.85, 1])})`,
             width: '88%',
             borderRadius: theme.borderRadius.lg,
             overflow: 'hidden',
-            border: `2px solid ${theme.colors.primary}44`,
+            border: `2px solid ${resolvedHeadingColor}44`,
             boxShadow: `0 10px 40px ${theme.colors.bgDark}66`,
           }}
         >
@@ -209,6 +234,43 @@ export const KeyPoint: React.FC<KeyPointProps> = ({
               display: 'block',
             }}
           />
+        </div>
+      )}
+
+      {/* 💡 TIP CARD — xuất hiện ở cuối section */}
+      {tip && frame >= 560 && (
+        <div
+          style={{
+            position: 'absolute',
+            bottom: 120,
+            width: '85%',
+            opacity: tipFade,
+            transform: `translateY(${interpolate(tipSlide, [0, 1], [30, 0])}px)`,
+          }}
+        >
+          <div
+            style={{
+              background: `${resolvedHeadingColor}15`,
+              border: `1px solid ${resolvedHeadingColor}44`,
+              borderRadius: theme.borderRadius.md,
+              padding: '16px 24px',
+              display: 'flex',
+              alignItems: 'flex-start',
+              gap: 12,
+            }}
+          >
+            <div style={{ fontSize: 28, flexShrink: 0 }}>💡</div>
+            <div
+              style={{
+                fontSize: theme.fontSizes.small + 2,
+                color: theme.colors.textLight,
+                lineHeight: 1.5,
+                fontStyle: 'italic',
+              }}
+            >
+              {tip}
+            </div>
+          </div>
         </div>
       )}
 
@@ -230,7 +292,7 @@ export const KeyPoint: React.FC<KeyPointProps> = ({
               borderRadius: theme.borderRadius.full,
               background:
                 i + 1 === pointNumber
-                  ? theme.colors.primary
+                  ? resolvedHeadingColor
                   : theme.colors.bgCard,
               transition: 'all 0.3s',
             }}
