@@ -1,16 +1,18 @@
 // ============================================================
-// Pipeline E2E — Đọc content.json → Validate → TTS → Duration → Render
+// Pipeline E2E — content.json → Validate → TTS → Duration → Adapt → Render
 // Usage: node scripts/pipeline.js <content.json> [--skip-tts] [--skip-render]
 // 
 // Output: output/<lesson-slug>/
-//   ├── audio/         ← audio files
+//   ├── audio/         ← audio files  
 //   ├── images/        ← image files (nếu có)
-//   └── <slug>-v1.mp4  ← video
+//   ├── props.json     ← adapted props cho Remotion
+//   └── <slug>-v1.mp4  ← video final
 // ============================================================
 
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
+const { adaptContent } = require('./content-adapter');
 
 // ============ HELPERS ============
 
@@ -26,14 +28,13 @@ function slugify(text) {
 const TEMPLATE_MAP = {
   concept_explainer: 'ConceptExplainerVideo',
   step_by_step: 'MicroLearningVideo',
-  // Thêm template mới ở đây
 };
 
 // ============ MAIN ============
 
 async function pipeline() {
   console.log('\n╔══════════════════════════════════════════════╗');
-  console.log('║   🎬 Microlearning Video Pipeline            ║');
+  console.log('║   🎬 Microlearning Video Pipeline v2         ║');
   console.log('╚══════════════════════════════════════════════╝\n');
 
   // Parse arguments
@@ -74,16 +75,18 @@ async function pipeline() {
     process.exit(1);
   }
 
-  // Validate cơ bản
+  // Validate sections
   if (!content.sections || content.sections.length < 2) {
     console.error('❌ content.json phải có ít nhất 2 sections');
     process.exit(1);
   }
 
-  // Kiểm tra theme tồn tại
-  const themePath = path.join(__dirname, '..', 'data', 'themes', `${themeId}.json`);
-  if (!fs.existsSync(themePath)) {
-    console.warn(`⚠️  Theme "${themeId}" không tìm thấy, dùng universal-dark`);
+  // Kiểm tra mỗi section có id
+  for (const s of content.sections) {
+    if (!s.id) {
+      console.error(`❌ Section type "${s.type}" thiếu field "id". Mỗi section cần có id duy nhất.`);
+      process.exit(1);
+    }
   }
 
   // Tạo thư mục output
@@ -110,28 +113,62 @@ async function pipeline() {
 
   // ────── Step 3: Đo duration ──────
   console.log('📏 Step 3: Đo audio durations...');
+  let durationsData = {};
   try {
     execSync(`node scripts/build-durations-generic.js "${contentPath}"`, {
       cwd: path.join(__dirname, '..'),
       stdio: 'inherit',
     });
+    // Đọc kết quả
+    const durationsPath = path.join(__dirname, '..', 'src', `audioDurations-${lessonSlug}.json`);
+    if (fs.existsSync(durationsPath)) {
+      durationsData = JSON.parse(fs.readFileSync(durationsPath, 'utf-8'));
+    }
   } catch (err) {
     console.error('❌ Build durations thất bại!');
     process.exit(1);
   }
   console.log('');
 
-  // ────── Step 4: Render ──────
+  // ────── Step 4: Transform — content-adapter ──────
+  console.log('🔄 Step 4: Transform content → Remotion props...');
+
+  // Load theme
+  let theme = {};
+  const themePath = path.join(__dirname, '..', 'data', 'themes', `${themeId}.json`);
+  if (fs.existsSync(themePath)) {
+    theme = JSON.parse(fs.readFileSync(themePath, 'utf-8'));
+    console.log(`   ✅ Theme loaded: ${themeId}`);
+  } else {
+    console.log(`   ⚠️  Theme "${themeId}" không tìm thấy, dùng mặc định`);
+  }
+
+  // Adapt
+  const audioDir = `audio/${lessonSlug}`;
+  const props = adaptContent(content, durationsData, theme, audioDir);
+
+  // Lưu props.json vào output
+  const propsPath = path.join(outputDir, 'props.json');
+  fs.writeFileSync(propsPath, JSON.stringify(props, null, 2));
+  console.log(`   ✅ Props saved: ${propsPath}`);
+  console.log(`   📊 Sections: ${Object.keys(props.lessonData).join(', ')}`);
+  console.log('');
+
+  // ────── Step 5: Render ──────
   if (skipRender) {
-    console.log('⏭️  Step 4: SKIP Render (--skip-render)\n');
+    console.log('⏭️  Step 5: SKIP Render (--skip-render)\n');
   } else {
     const videoFileName = `${lessonSlug}-v1.mp4`;
     const videoPath = path.join(outputDir, videoFileName);
 
-    console.log(`🎬 Step 4: Render video → ${videoPath}...`);
+    console.log(`🎬 Step 5: Render video → ${videoPath}...`);
+
+    // Escape props path cho shell
+    const propsPathForShell = propsPath.replace(/\\/g, '/');
+
     try {
       execSync(
-        `npx remotion render ${compositionId} "${videoPath}"`,
+        `npx remotion render ${compositionId} "${videoPath}" --props="${propsPathForShell}"`,
         {
           cwd: path.join(__dirname, '..'),
           stdio: 'inherit',
@@ -152,33 +189,44 @@ async function pipeline() {
 
   // ────── Summary ──────
   console.log('\n╔══════════════════════════════════════════════╗');
-  console.log('║   ✅ Pipeline hoàn thành!                    ║');
+  console.log('║   ✅ Pipeline v2 hoàn thành!                 ║');
   console.log('╚══════════════════════════════════════════════╝');
   console.log(`\n📁 Output: ${outputDir}/`);
 
   // List files
-  const listDir = (dir) => {
+  const listDir = (dir, prefix = '   ') => {
     if (!fs.existsSync(dir)) return;
     const files = fs.readdirSync(dir);
     files.forEach(f => {
       const stat = fs.statSync(path.join(dir, f));
       if (stat.isFile()) {
-        console.log(`   ${f} (${(stat.size / 1024).toFixed(1)} KB)`);
+        const sizeKB = stat.size / 1024;
+        const sizeStr = sizeKB > 1024
+          ? `${(sizeKB / 1024).toFixed(1)} MB`
+          : `${sizeKB.toFixed(1)} KB`;
+        console.log(`${prefix}${f} (${sizeStr})`);
       }
     });
   };
 
   console.log('   📂 audio/');
-  listDir(path.join(outputDir, 'audio'));
+  listDir(path.join(outputDir, 'audio'), '      ');
   console.log('   📂 images/');
-  listDir(path.join(outputDir, 'images'));
+  listDir(path.join(outputDir, 'images'), '      ');
 
-  const videos = fs.readdirSync(outputDir).filter(f => f.endsWith('.mp4'));
-  if (videos.length > 0) {
-    console.log('   🎬 videos:');
-    videos.forEach(v => {
-      const size = fs.statSync(path.join(outputDir, v)).size;
-      console.log(`   ${v} (${(size / 1024 / 1024).toFixed(1)} MB)`);
+  const rootFiles = fs.readdirSync(outputDir).filter(f => {
+    const stat = fs.statSync(path.join(outputDir, f));
+    return stat.isFile();
+  });
+  if (rootFiles.length > 0) {
+    console.log('   📄 files:');
+    rootFiles.forEach(f => {
+      const stat = fs.statSync(path.join(outputDir, f));
+      const sizeKB = stat.size / 1024;
+      const sizeStr = sizeKB > 1024
+        ? `${(sizeKB / 1024).toFixed(1)} MB`
+        : `${sizeKB.toFixed(1)} KB`;
+      console.log(`      ${f} (${sizeStr})`);
     });
   }
 }

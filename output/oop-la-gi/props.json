@@ -1,0 +1,183 @@
+{
+  "meta": {
+    "lesson": "OOP là gì?",
+    "course": "Lập trình hướng đối tượng",
+    "courseCode": "SE201",
+    "chapter": "Chương 1: Giới thiệu OOP",
+    "instructor": "ThS. Nguyễn Văn A",
+    "bloomLevel": "understand"
+  },
+  "videoType": "concept_explainer",
+  "lessonData": {
+    "hook": {
+      "audio": "audio/oop-la-gi/hook.mp3",
+      "duration": 421,
+      "hookText": "Bạn có biết hơn 90 phần trăm ứng dụng di động hiện nay đều được xây dựng bằng lập trình hướng đối tượng?",
+      "hookStat": "90%",
+      "title": "OOP là gì?",
+      "subtitle": "Lập trình hướng đối tượng cho người mới bắt đầu",
+      "lessonNumber": "Bài 01 · Chương 1: Giới thiệu OOP",
+      "emoji": "🤔"
+    },
+    "definition": {
+      "audio": "audio/oop-la-gi/definition.mp3",
+      "duration": 614,
+      "term": "OOP",
+      "termEnglish": "Object-Oriented Programming",
+      "definition": "Là mô hình lập trình tổ chức phần mềm thành các đối tượng. Mỗi đối tượng chứa dữ liệu và hành vi liên quan, phản ánh các thực thể trong thế giới thực.",
+      "keywords": [
+        "Đối tượng",
+        "Thuộc tính",
+        "Phương thức",
+        "Lớp",
+        "Kế thừa"
+      ],
+      "headingColor": "#60A5FA"
+    },
+    "visualExplain": {
+      "audio": "audio/oop-la-gi/visual.mp3",
+      "duration": 931,
+      "analogy": "OOP giống như một bản thiết kế nhà. Lớp (Class) là bản vẽ, còn mỗi ngôi nhà xây ra chính là một Đối tượng (Object) với màu sơn, số phòng khác nhau.",
+      "content": "Hãy tưởng tượng bạn có bản thiết kế một chiếc xe:\n\n🚗 Lớp Xe:\n• Thuộc tính: màu sắc, tốc độ tối đa, số chỗ ngồi\n• Phương thức: khởi động, tăng tốc, phanh\n\nMỗi chiếc xe cụ thể trên đường là một Đối tượng được tạo từ Lớp Xe.",
+      "headingColor": "#22D3EE"
+    },
+    "example": {
+      "audio": "audio/oop-la-gi/example.mp3",
+      "duration": 999,
+      "analogy": "Ứng dụng Grab: Mỗi tài xế = 1 Object TàiXế, mỗi khách = 1 Object KháchHàng.",
+      "content": "Trong ứng dụng Grab, mỗi thành phần là một đối tượng:\n\n👤 Lớp TàiXế:\n• Thuộc tính: tên, biển số xe, đánh giá\n• Phương thức: nhậnĐơn(), diChuyển()\n\n📱 Lớp KháchHàng:\n• Thuộc tính: tên, vị trí, phương thức thanh toán\n• Phương thức: đặtXe(), đánhGiá()\n\nMỗi tài xế và khách hàng thực tế là một Object riêng biệt.",
+      "headingColor": "#34D399"
+    },
+    "application": {
+      "audio": "audio/oop-la-gi/application.mp3",
+      "duration": 786,
+      "title": "Tại sao phải học OOP?",
+      "applications": [
+        "Code dễ bảo trì — mỗi đối tượng độc lập, sửa 1 chỗ không ảnh hưởng chỗ khác",
+        "Tái sử dụng code — viết 1 lần, dùng nhiều lần nhờ kế thừa",
+        "Làm việc nhóm hiệu quả — mỗi người phụ trách 1 nhóm đối tượng",
+        "Mô hình hóa thế giới thực — dễ hiểu, dễ thiết kế hệ thống lớn"
+      ],
+      "headingColor": "#FBBF24"
+    },
+    "quiz": {
+      "audio": "audio/oop-la-gi/quiz.mp3",
+      "duration": 913,
+      "question": "Trong OOP, Class là gì?",
+      "options": [
+        "Một biến lưu trữ dữ liệu",
+        "Bản thiết kế để tạo ra các đối tượng",
+        "Một hàm xử lý dữ liệu",
+        "Một thư viện có sẵn"
+      ],
+      "correctIndex": 1,
+      "explanation": "Class là bản thiết kế (blueprint) chứa thuộc tính và phương thức. Object là thực thể cụ thể được tạo từ Class."
+    },
+    "recap": {
+      "audio": "audio/oop-la-gi/recap.mp3",
+      "duration": 528,
+      "summary": "OOP = Tổ chức code thành đối tượng.\nClass = Bản thiết kế.\nObject = Thực thể cụ thể.",
+      "nextLesson": "4 Tính chất cốt lõi của OOP",
+      "channelName": "Microlearning · Đại học",
+      "recapSteps": [
+        {
+          "icon": "📖",
+          "text": "OOP = Tổ chức code thành đối tượng",
+          "color": "#60A5FA"
+        },
+        {
+          "icon": "🏗️",
+          "text": "Class = Bản thiết kế",
+          "color": "#22D3EE"
+        },
+        {
+          "icon": "🚗",
+          "text": "Object = Thực thể cụ thể",
+          "color": "#34D399"
+        },
+        {
+          "icon": "⚡",
+          "text": "4 đặc tính: Đóng gói, Kế thừa, Đa hình, Trừu tượng",
+          "color": "#FBBF24"
+        }
+      ]
+    }
+  },
+  "colorProps": {
+    "primary": "#3B82F6",
+    "primaryLight": "#93C5FD",
+    "accent": "#06B6D4",
+    "accentGreen": "#10B981",
+    "accentRed": "#EF4444",
+    "bgDark": "#0F172A",
+    "bgDarkAlt": "#1E293B",
+    "bgCard": "#334155",
+    "bgGlass": "rgba(30, 41, 59, 0.7)",
+    "textWhite": "#F8FAFC",
+    "textLight": "#CBD5E1",
+    "textMuted": "#64748B",
+    "gradientPrimary": "linear-gradient(135deg, #3B82F6, #06B6D4)",
+    "gradientDark": "linear-gradient(180deg, #0F172A 0%, #1E293B 100%)"
+  },
+  "headingColors": [
+    "#60A5FA",
+    "#22D3EE",
+    "#34D399",
+    "#FBBF24",
+    "#A78BFA",
+    "#F472B6",
+    "#FB923C"
+  ],
+  "themeId": "tech-blue",
+  "durations": {
+    "_meta": {
+      "generatedAt": "2026-03-29T11:41:59.476Z",
+      "videoType": "concept_explainer",
+      "lesson": "OOP là gì?",
+      "lessonSlug": "oop-la-gi",
+      "fps": 30,
+      "bufferSeconds": 2,
+      "transitionFrames": 15,
+      "totalDurationSeconds": 171,
+      "totalDurationFrames": 5102,
+      "audioDir": "audio/oop-la-gi"
+    },
+    "sections": {
+      "hook": {
+        "audioDuration": 12,
+        "totalSeconds": 15,
+        "frames": 421
+      },
+      "definition": {
+        "audioDuration": 18.5,
+        "totalSeconds": 21,
+        "frames": 614
+      },
+      "visual": {
+        "audioDuration": 29,
+        "totalSeconds": 32,
+        "frames": 931
+      },
+      "example": {
+        "audioDuration": 31.3,
+        "totalSeconds": 34,
+        "frames": 999
+      },
+      "application": {
+        "audioDuration": 24.2,
+        "totalSeconds": 27,
+        "frames": 786
+      },
+      "quiz": {
+        "audioDuration": 28.4,
+        "totalSeconds": 31,
+        "frames": 913
+      },
+      "recap": {
+        "audioDuration": 15.6,
+        "totalSeconds": 18,
+        "frames": 528
+      }
+    }
+  }
+}
