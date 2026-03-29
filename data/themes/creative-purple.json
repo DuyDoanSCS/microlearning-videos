@@ -1,0 +1,31 @@
+{
+  "id": "creative-purple",
+  "name": "Creative Purple",
+  "category": "humanities",
+  "colors": {
+    "primary": "#7C3AED",
+    "primaryLight": "#C4B5FD",
+    "accent": "#EC4899",
+    "accentGreen": "#10B981",
+    "accentRed": "#EF4444",
+    "headingColors": ["#A78BFA", "#F472B6", "#FB923C", "#FBBF24", "#34D399", "#60A5FA", "#22D3EE"],
+    "bgDark": "#1A0F2E",
+    "bgDarkAlt": "#261840",
+    "bgCard": "#3B2860",
+    "bgGlass": "rgba(38, 24, 64, 0.7)",
+    "textWhite": "#FAF5FF",
+    "textLight": "#DDD6FE",
+    "textMuted": "#8B7FB0"
+  },
+  "gradients": {
+    "primary": "linear-gradient(135deg, #7C3AED, #EC4899)",
+    "dark": "linear-gradient(180deg, #1A0F2E 0%, #261840 100%)",
+    "card": "linear-gradient(135deg, rgba(124,58,237,0.1), rgba(236,72,153,0.05))"
+  },
+  "fonts": {
+    "heading": "'Be Vietnam Pro', 'Inter', sans-serif",
+    "body": "'Be Vietnam Pro', 'Inter', sans-serif"
+  },
+  "animation_style": "dynamic",
+  "corner_radius": "rounded"
+}

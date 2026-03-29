@@ -1,0 +1,31 @@
+{
+  "id": "universal-dark",
+  "name": "Universal Dark",
+  "category": "general",
+  "colors": {
+    "primary": "#6366F1",
+    "primaryLight": "#A5B4FC",
+    "accent": "#06B6D4",
+    "accentGreen": "#10B981",
+    "accentRed": "#EF4444",
+    "headingColors": ["#60A5FA", "#34D399", "#FBBF24", "#F472B6", "#A78BFA", "#22D3EE", "#FB923C"],
+    "bgDark": "#111827",
+    "bgDarkAlt": "#1F2937",
+    "bgCard": "#374151",
+    "bgGlass": "rgba(31, 41, 55, 0.7)",
+    "textWhite": "#F9FAFB",
+    "textLight": "#D1D5DB",
+    "textMuted": "#6B7280"
+  },
+  "gradients": {
+    "primary": "linear-gradient(135deg, #6366F1, #06B6D4)",
+    "dark": "linear-gradient(180deg, #111827 0%, #1F2937 100%)",
+    "card": "linear-gradient(135deg, rgba(99,102,241,0.1), rgba(6,182,212,0.05))"
+  },
+  "fonts": {
+    "heading": "'Be Vietnam Pro', 'Inter', sans-serif",
+    "body": "'Be Vietnam Pro', 'Inter', sans-serif"
+  },
+  "animation_style": "smooth",
+  "corner_radius": "rounded"
+}

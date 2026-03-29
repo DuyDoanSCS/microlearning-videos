@@ -1,0 +1,31 @@
+{
+  "id": "business-gold",
+  "name": "Business Gold",
+  "category": "business",
+  "colors": {
+    "primary": "#D97706",
+    "primaryLight": "#FCD34D",
+    "accent": "#F59E0B",
+    "accentGreen": "#10B981",
+    "accentRed": "#EF4444",
+    "headingColors": ["#FBBF24", "#F59E0B", "#FB923C", "#F472B6", "#A78BFA", "#34D399", "#60A5FA"],
+    "bgDark": "#1C1917",
+    "bgDarkAlt": "#292524",
+    "bgCard": "#44403C",
+    "bgGlass": "rgba(41, 37, 36, 0.7)",
+    "textWhite": "#FAFAF9",
+    "textLight": "#D6D3D1",
+    "textMuted": "#78716C"
+  },
+  "gradients": {
+    "primary": "linear-gradient(135deg, #D97706, #F59E0B)",
+    "dark": "linear-gradient(180deg, #1C1917 0%, #292524 100%)",
+    "card": "linear-gradient(135deg, rgba(217,119,6,0.1), rgba(245,158,11,0.05))"
+  },
+  "fonts": {
+    "heading": "'Be Vietnam Pro', 'Inter', sans-serif",
+    "body": "'Be Vietnam Pro', 'Inter', sans-serif"
+  },
+  "animation_style": "smooth",
+  "corner_radius": "rounded"
+}

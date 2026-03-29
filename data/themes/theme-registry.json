@@ -1,0 +1,45 @@
+{
+  "themes": [
+    {
+      "id": "tech-blue",
+      "name": "Tech Blue",
+      "emoji": "🔵",
+      "category": "tech",
+      "description": "Chuyên nghiệp, hiện đại — phù hợp IT, Lập trình, Mạng, AI",
+      "recommended_for": ["CNTT", "KTPM", "MMT", "HTTT", "KHMT", "ATTT", "AI"]
+    },
+    {
+      "id": "business-gold",
+      "name": "Business Gold",
+      "emoji": "🟡",
+      "category": "business",
+      "description": "Sang trọng, ấm áp — phù hợp Quản trị, Marketing, Kế toán",
+      "recommended_for": ["QTKD", "Marketing", "Kế toán", "Tài chính", "Kinh tế"]
+    },
+    {
+      "id": "science-green",
+      "name": "Science Green",
+      "emoji": "🟢",
+      "category": "science",
+      "description": "Tươi mát, tự nhiên — phù hợp Khoa học, Y tế, Sinh học",
+      "recommended_for": ["Khoa học", "Y tế", "Sinh học", "Hóa học", "Môi trường"]
+    },
+    {
+      "id": "creative-purple",
+      "name": "Creative Purple",
+      "emoji": "🟣",
+      "category": "humanities",
+      "description": "Sáng tạo, nghệ thuật — phù hợp Thiết kế, Truyền thông, Ngôn ngữ",
+      "recommended_for": ["Thiết kế", "Truyền thông", "Ngôn ngữ", "Nghệ thuật", "Sư phạm"]
+    },
+    {
+      "id": "universal-dark",
+      "name": "Universal Dark",
+      "emoji": "⚫",
+      "category": "general",
+      "description": "Đa năng, chuyên nghiệp — phù hợp mọi môn học",
+      "recommended_for": ["*"],
+      "is_default": true
+    }
+  ]
+}

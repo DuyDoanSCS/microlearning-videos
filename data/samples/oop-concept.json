@@ -1,0 +1,91 @@
+{
+  "meta": {
+    "course": "Lập trình hướng đối tượng",
+    "course_code": "SE201",
+    "lesson": "OOP là gì?",
+    "lesson_number": 1,
+    "chapter": "Chương 1: Giới thiệu OOP",
+    "credit_hours": 3,
+    "instructor": "ThS. Nguyễn Văn A",
+    "bloom_level": "understand",
+    "abet_outcome": "SO1",
+    "target_audience": "Sinh viên năm 2, ngành CNTT"
+  },
+
+  "video_type": "concept_explainer",
+
+  "learning_objectives": [
+    "Hiểu được khái niệm lập trình hướng đối tượng (OOP)",
+    "Phân biệt được 4 đặc tính cốt lõi của OOP"
+  ],
+
+  "sections": [
+    {
+      "type": "hook",
+      "emoji": "🤔",
+      "hook_stat": "90%",
+      "hook_text": "Bạn có biết hơn 90 phần trăm ứng dụng di động hiện nay đều được xây dựng bằng lập trình hướng đối tượng?",
+      "title": "OOP là gì?",
+      "subtitle": "Lập trình hướng đối tượng cho người mới bắt đầu"
+    },
+    {
+      "type": "definition",
+      "icon": "📖",
+      "term": "OOP",
+      "term_english": "Object-Oriented Programming",
+      "definition": "Là mô hình lập trình tổ chức phần mềm thành các đối tượng. Mỗi đối tượng chứa dữ liệu và hành vi liên quan, phản ánh các thực thể trong thế giới thực.",
+      "keywords": ["Đối tượng", "Thuộc tính", "Phương thức", "Lớp", "Kế thừa"]
+    },
+    {
+      "type": "visual_explain",
+      "analogy": "OOP giống như một bản thiết kế nhà. Lớp (Class) là bản vẽ, còn mỗi ngôi nhà xây ra chính là một Đối tượng (Object) với màu sơn, số phòng khác nhau.",
+      "content": "Hãy tưởng tượng bạn có bản thiết kế một chiếc xe:\n\n🚗 Lớp Xe:\n• Thuộc tính: màu sắc, tốc độ tối đa, số chỗ ngồi\n• Phương thức: khởi động, tăng tốc, phanh\n\nMỗi chiếc xe cụ thể trên đường là một Đối tượng được tạo từ Lớp Xe.",
+      "illustration_prompt": "Infographic showing Class vs Object concept with car blueprint analogy, clean modern style"
+    },
+    {
+      "type": "example",
+      "icon": "🔗",
+      "title": "Ví dụ trong ứng dụng Grab",
+      "content": "Trong ứng dụng Grab, mỗi thành phần là một đối tượng:\n\n👤 Lớp TàiXế:\n• Thuộc tính: tên, biển số xe, đánh giá\n• Phương thức: nhậnĐơn(), diChuyển()\n\n📱 Lớp KháchHàng:\n• Thuộc tính: tên, vị trí, phương thức thanh toán\n• Phương thức: đặtXe(), đánhGiá()\n\nMỗi tài xế và khách hàng thực tế là một Object riêng biệt."
+    },
+    {
+      "type": "application",
+      "title": "Tại sao phải học OOP?",
+      "applications": [
+        "Code dễ bảo trì — mỗi đối tượng độc lập, sửa 1 chỗ không ảnh hưởng chỗ khác",
+        "Tái sử dụng code — viết 1 lần, dùng nhiều lần nhờ kế thừa",
+        "Làm việc nhóm hiệu quả — mỗi người phụ trách 1 nhóm đối tượng",
+        "Mô hình hóa thế giới thực — dễ hiểu, dễ thiết kế hệ thống lớn"
+      ]
+    },
+    {
+      "type": "quiz",
+      "question": "Trong OOP, Class là gì?",
+      "options": [
+        "Một biến lưu trữ dữ liệu",
+        "Bản thiết kế để tạo ra các đối tượng",
+        "Một hàm xử lý dữ liệu",
+        "Một thư viện có sẵn"
+      ],
+      "correct": 1,
+      "explanation": "Class là bản thiết kế (blueprint) chứa thuộc tính và phương thức. Object là thực thể cụ thể được tạo từ Class."
+    },
+    {
+      "type": "recap",
+      "recap_points": [
+        "OOP = Tổ chức code thành đối tượng",
+        "Class = Bản thiết kế",
+        "Object = Thực thể cụ thể",
+        "4 đặc tính: Đóng gói, Kế thừa, Đa hình, Trừu tượng"
+      ],
+      "call_to_action": "Hãy thử tạo một Class đơn giản trong Python hoặc Java ngay hôm nay!",
+      "next_lesson": "4 Tính chất cốt lõi của OOP"
+    }
+  ],
+
+  "style": {
+    "theme": "tech-blue",
+    "voice": "vi-VN-HoaiMyNeural",
+    "pace": "normal"
+  }
+}

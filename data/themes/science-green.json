@@ -1,0 +1,31 @@
+{
+  "id": "science-green",
+  "name": "Science Green",
+  "category": "science",
+  "colors": {
+    "primary": "#059669",
+    "primaryLight": "#6EE7B7",
+    "accent": "#14B8A6",
+    "accentGreen": "#10B981",
+    "accentRed": "#EF4444",
+    "headingColors": ["#34D399", "#2DD4BF", "#60A5FA", "#FBBF24", "#A78BFA", "#F472B6", "#FB923C"],
+    "bgDark": "#0C1A14",
+    "bgDarkAlt": "#14261E",
+    "bgCard": "#1E3A2E",
+    "bgGlass": "rgba(20, 38, 30, 0.7)",
+    "textWhite": "#F0FDF4",
+    "textLight": "#BBF7D0",
+    "textMuted": "#6B8F7B"
+  },
+  "gradients": {
+    "primary": "linear-gradient(135deg, #059669, #14B8A6)",
+    "dark": "linear-gradient(180deg, #0C1A14 0%, #14261E 100%)",
+    "card": "linear-gradient(135deg, rgba(5,150,105,0.1), rgba(20,184,166,0.05))"
+  },
+  "fonts": {
+    "heading": "'Be Vietnam Pro', 'Inter', sans-serif",
+    "body": "'Be Vietnam Pro', 'Inter', sans-serif"
+  },
+  "animation_style": "smooth",
+  "corner_radius": "rounded"
+}

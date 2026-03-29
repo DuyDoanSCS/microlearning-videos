@@ -1,0 +1,92 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Microlearning Video Content",
+  "description": "Schema chuẩn cho input từ hệ thống Instructional Design → Pipeline Video Microlearning",
+  "type": "object",
+  "required": ["meta", "video_type", "learning_objectives", "sections"],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": ["course", "lesson", "target_audience"],
+      "properties": {
+        "course": { "type": "string", "description": "Tên môn học" },
+        "course_code": { "type": "string" },
+        "lesson": { "type": "string", "description": "Tên bài học" },
+        "lesson_number": { "type": "integer", "minimum": 1 },
+        "credit_hours": { "type": "integer", "minimum": 1, "maximum": 6 },
+        "chapter": { "type": "string" },
+        "instructor": { "type": "string" },
+        "bloom_level": {
+          "type": "string",
+          "enum": ["remember", "understand", "apply", "analyze", "evaluate", "create"]
+        },
+        "abet_outcome": { "type": "string" },
+        "target_audience": { "type": "string" }
+      }
+    },
+
+    "video_type": {
+      "type": "string",
+      "enum": ["concept_explainer", "step_by_step", "comparison", "case_study", "review_recap"],
+      "description": "Dạng video — quyết định template nào được sử dụng"
+    },
+
+    "learning_objectives": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1,
+      "maxItems": 3,
+      "description": "Mục tiêu học tập (1-3 mục)"
+    },
+
+    "sections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["type"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["hook", "intro", "definition", "visual_explain", "example", "application", "key_point", "quiz", "recap", "outro"]
+          },
+          "order": { "type": "integer" },
+          "icon": { "type": "string" },
+          "title": { "type": "string" },
+          "subtitle": { "type": "string" },
+          "content": { "type": "string" },
+          "hook_text": { "type": "string", "description": "Câu hỏi/thống kê gây tò mò" },
+          "hook_stat": { "type": "string", "description": "Số liệu sốc (ví dụ: 90%)" },
+          "term": { "type": "string", "description": "Thuật ngữ cần định nghĩa" },
+          "term_english": { "type": "string", "description": "Tên tiếng Anh" },
+          "definition": { "type": "string" },
+          "keywords": { "type": "array", "items": { "type": "string" } },
+          "analogy": { "type": "string", "description": "Metaphor/analogy để giải thích" },
+          "example": { "type": "string" },
+          "counter_example": { "type": "string" },
+          "applications": { "type": "array", "items": { "type": "string" } },
+          "tip": { "type": "string" },
+          "illustration_prompt": { "type": "string", "description": "Prompt cho AI tạo hình minh họa" },
+          "question": { "type": "string" },
+          "options": { "type": "array", "items": { "type": "string" }, "minItems": 3, "maxItems": 5 },
+          "correct": { "type": "integer" },
+          "explanation": { "type": "string" },
+          "recap_points": { "type": "array", "items": { "type": "string" } },
+          "call_to_action": { "type": "string" },
+          "next_lesson": { "type": "string" }
+        }
+      }
+    },
+
+    "style": {
+      "type": "object",
+      "properties": {
+        "theme": {
+          "type": "string",
+          "description": "Theme ID từ thư viện (tech-blue, business-gold, science-green, creative-purple, universal-dark)"
+        },
+        "voice": { "type": "string", "default": "vi-VN-HoaiMyNeural" },
+        "pace": { "type": "string", "enum": ["slow", "normal", "fast"], "default": "normal" }
+      }
+    }
+  }
+}

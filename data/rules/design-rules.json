@@ -1,0 +1,159 @@
+{
+  "_meta": {
+    "version": "1.0",
+    "total_rules": 25,
+    "categories": ["duration", "content", "visual", "audio", "transition", "pedagogy"]
+  },
+  "rules": [
+    {
+      "id": "R01", "category": "duration", "severity": "critical",
+      "rule": "Audio-First Duration",
+      "description": "Frame duration = audio duration + 2s buffer. KHÔNG BAO GIỜ hardcode.",
+      "check": "section.frames >= section.audioDuration * fps + 60"
+    },
+    {
+      "id": "R02", "category": "duration", "severity": "critical",
+      "rule": "Tổng thời lượng 2-5 phút",
+      "description": "Microlearning tối ưu 3-4 phút. Tối đa 5 phút.",
+      "check": "totalDuration >= 120 && totalDuration <= 300"
+    },
+    {
+      "id": "R03", "category": "duration", "severity": "high",
+      "rule": "Zero Dead Time",
+      "description": "0 giây lãng phí. Mỗi giây phải có nội dung audio hoặc visual.",
+      "check": "deadTimeSeconds === 0"
+    },
+    {
+      "id": "R04", "category": "duration", "severity": "medium",
+      "rule": "Section balance",
+      "description": "Mỗi key point/concept section: 15-35s. Quiz: 15-25s. Recap: 20-30s.",
+      "check": "section.duration >= 15 && section.duration <= 35"
+    },
+    {
+      "id": "R05", "category": "content", "severity": "critical",
+      "rule": "Single Concept per Video",
+      "description": "1 video = 1 khái niệm/kỹ năng cốt lõi. Không nhồi nhét.",
+      "check": "learningObjectives.length <= 3"
+    },
+    {
+      "id": "R06", "category": "content", "severity": "high",
+      "rule": "3-7 Key Points (Miller's Law)",
+      "description": "Tối thiểu 3, tối đa 7 điểm chính để không quá tải nhận thức.",
+      "check": "keyPoints.length >= 3 && keyPoints.length <= 7"
+    },
+    {
+      "id": "R07", "category": "content", "severity": "high",
+      "rule": "Hook trong 5-8 giây đầu",
+      "description": "Intro/Hook phải có câu gây chú ý (Attention Theory) trong 8s đầu.",
+      "check": "sections[0].type in ['hook', 'intro']"
+    },
+    {
+      "id": "R08", "category": "content", "severity": "medium",
+      "rule": "Tip/Mẹo thực tế",
+      "description": "Mỗi key point/concept nên có ít nhất 1 tip/mẹo thực tế.",
+      "check": "section.tip !== undefined"
+    },
+    {
+      "id": "R09", "category": "content", "severity": "high",
+      "rule": "Quiz bắt buộc",
+      "description": "Ít nhất 1 câu quiz kiểm tra hiểu biết (Active Recall).",
+      "check": "sections.filter(s => s.type === 'quiz').length >= 1"
+    },
+    {
+      "id": "R10", "category": "content", "severity": "high",
+      "rule": "Recap ở phần kết",
+      "description": "Visual recap tóm tắt các điểm chính cuối video (Forgetting Curve).",
+      "check": "sections.at(-1).type in ['recap', 'outro']"
+    },
+    {
+      "id": "R11", "category": "visual", "severity": "high",
+      "rule": "Heading Color riêng",
+      "description": "Mỗi section chính 1 màu riêng biệt để tăng chú ý.",
+      "check": "headingColors.length >= sections.filter(s => s.type === 'key_point').length"
+    },
+    {
+      "id": "R12", "category": "visual", "severity": "medium",
+      "rule": "Dark Theme mặc định",
+      "description": "Nền tối, chữ sáng — giảm mỏi mắt khi xem trên mobile.",
+      "check": "theme.colors.bgDark is dark color"
+    },
+    {
+      "id": "R13", "category": "visual", "severity": "medium",
+      "rule": "Font size tối thiểu 18pt",
+      "description": "Text nhỏ nhất phải đọc được trên mobile (1080p vertical).",
+      "check": "minFontSize >= 18"
+    },
+    {
+      "id": "R14", "category": "visual", "severity": "critical",
+      "rule": "Portrait 1080×1920",
+      "description": "Vertical video cho mobile-first. Tỉ lệ 9:16.",
+      "check": "video.width === 1080 && video.height === 1920"
+    },
+    {
+      "id": "R15", "category": "visual", "severity": "low",
+      "rule": "Glassmorphism cards",
+      "description": "Card nền kính mờ, backdrop-blur, border subtle — tạo chiều sâu.",
+      "check": "bgGlass contains rgba && has backdrop-filter"
+    },
+    {
+      "id": "R16", "category": "audio", "severity": "critical",
+      "rule": "Vietnamese Neural Voice",
+      "description": "Giọng vi-VN-HoaiMyNeural (nữ, mềm, tự nhiên).",
+      "check": "voice === 'vi-VN-HoaiMyNeural'"
+    },
+    {
+      "id": "R17", "category": "audio", "severity": "high",
+      "rule": "English = American Accent",
+      "description": "Từ tiếng Anh giữ nguyên, neural voice tự đọc American accent.",
+      "check": "englishTerms preserved as-is in TTS text"
+    },
+    {
+      "id": "R18", "category": "audio", "severity": "critical",
+      "rule": "Pipeline bắt buộc: TTS → Measure → Render",
+      "description": "Không bỏ bước đo audio. Luôn chạy build-durations trước render.",
+      "check": "audioDurations.json exists && is current"
+    },
+    {
+      "id": "R19", "category": "audio", "severity": "medium",
+      "rule": "Pace tự nhiên",
+      "description": "Không tăng tốc quá 1.1x. Ưu tiên tốc độ đọc tự nhiên.",
+      "check": "playbackRate <= 1.1"
+    },
+    {
+      "id": "R20", "category": "transition", "severity": "high",
+      "rule": "Fade 0.5s giữa sections",
+      "description": "Transition = fade 15 frames (0.5s). Mượt, tự nhiên.",
+      "check": "transitionFrames === 15"
+    },
+    {
+      "id": "R21", "category": "transition", "severity": "high",
+      "rule": "Không hard cut",
+      "description": "Cấm cắt trực tiếp giữa 2 section. Luôn có transition.",
+      "check": "every section pair has transition"
+    },
+    {
+      "id": "R22", "category": "transition", "severity": "medium",
+      "rule": "Fade-out cuối video",
+      "description": "2s cuối video fade-to-black hoặc fade-to-logo.",
+      "check": "lastSection has fadeOut animation"
+    },
+    {
+      "id": "R23", "category": "pedagogy", "severity": "high",
+      "rule": "Bloom Level alignment",
+      "description": "Template phải khớp Bloom level: Concept=Remember/Understand, StepByStep=Apply.",
+      "check": "template.bloomLevel matches content.bloomLevel"
+    },
+    {
+      "id": "R24", "category": "pedagogy", "severity": "high",
+      "rule": "Cognitive Load ≤ 7",
+      "description": "Không quá 7 đơn vị thông tin mới. Miller's Law.",
+      "check": "newConcepts.length <= 7"
+    },
+    {
+      "id": "R25", "category": "pedagogy", "severity": "medium",
+      "rule": "Spaced Repetition cue",
+      "description": "Recap = lặp lại kiến thức. Recap colors khớp heading colors để liên tưởng.",
+      "check": "recap.colors matches section.headingColors"
+    }
+  ]
+}

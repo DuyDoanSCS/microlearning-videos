@@ -32,7 +32,7 @@ function getAudioDuration(filePath) {
 
 function buildDurations() {
   console.log('=== Build Audio Durations ===\n');
-  
+
   const durations = {};
   let totalFrames = 0;
   const TRANSITION_FRAMES = 15; // 0.5s fade
@@ -49,7 +49,7 @@ function buildDurations() {
 
   for (const id of SECTION_ORDER) {
     const filePath = path.join(AUDIO_DIR, `${id}.mp3`);
-    
+
     if (!fs.existsSync(filePath)) {
       console.log(`${id.padEnd(14)} ❌ FILE NOT FOUND`);
       continue;
@@ -86,7 +86,7 @@ function buildDurations() {
   console.log('-'.repeat(60));
   console.log(`Subtotal frames: ${totalFrames}`);
   console.log(`Transitions: ${totalTransitions} × ${TRANSITION_FRAMES}f = -${overlapFrames}f overlap`);
-  console.log(`Final: ${finalFrames} frames = ${finalSeconds}s (~${Math.floor(finalSeconds/60)}:${String(finalSeconds%60).padStart(2,'0')})`);
+  console.log(`Final: ${finalFrames} frames = ${finalSeconds}s (~${Math.floor(finalSeconds / 60)}:${String(finalSeconds % 60).padStart(2, '0')})`);
 
   // Thêm metadata
   const output = {
@@ -103,8 +103,8 @@ function buildDurations() {
 
   fs.writeFileSync(OUTPUT_FILE, JSON.stringify(output, null, 2));
   console.log(`\n✅ Saved to: ${OUTPUT_FILE}`);
-  console.log(`📺 Video duration: ${finalSeconds}s (~${Math.floor(finalSeconds/60)}:${String(finalSeconds%60).padStart(2,'0')})`);
-  
+  console.log(`📺 Video duration: ${finalSeconds}s (~${Math.floor(finalSeconds / 60)}:${String(finalSeconds % 60).padStart(2, '0')})`);
+
   return output;
 }
 
